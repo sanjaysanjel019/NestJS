@@ -1,15 +1,22 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task, TaskStatus } from './task.model';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { GetTasksFilterDto } from './dto/get-task-filter.dto';
+import { TaskStatusValidationPipes } from './pipes/task-status-validation-pipe';
 
 @Controller('tasks')
 export class TasksController {
-  constructor(private tasksService: TasksService) {}
+  constructor(private tasksService: TasksService) { }
 
   @Get() //GET decorator for tasks
-  getAllTasks(): Task[] {
-    return this.tasksService.getAllTasks();
+  getTasks(@Query() filterDto: GetTasksFilterDto): Task[] {
+    if (Object.keys(filterDto)) {
+      return this.tasksService.getTasksWithFilters(filterDto);
+    } else {
+      return this.tasksService.getTasks();
+    }
+
   }
 
   @Get('/:id')
@@ -21,15 +28,16 @@ export class TasksController {
   deleteTaskById(@Param('id') id: string) {
     console.log("Data deleted");
     this.tasksService.deleteTaskById(id);
-   }
+  }
 
   @Post()
-  createTask(@Body() createTaskDto : CreateTaskDto): Task  {
+  @UsePipes(ValidationPipe)
+  createTask(@Body() createTaskDto: CreateTaskDto): Task {
     return this.tasksService.createTask(createTaskDto);
   }
-  
+
   @Patch('/:id/status')
-  updateTaskStatus(@Param('id') id:string, @Body('status') status:TaskStatus ):Task {
+  updateTaskStatus(@Param('id') id: string, @Body('status', TaskStatusValidationPipes ) status: TaskStatus): Task {
     return this.tasksService.updateTaskStatus(id, status);
   }
 

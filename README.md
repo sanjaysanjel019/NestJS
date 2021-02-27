@@ -11,6 +11,10 @@
 
 [Nest](https://github.com/nestjs/nest) A simple NestJS Application for Task Management.
 
+If you want to know basics about NestJS you can view my NestJS [Notion Notes](https://www.notion.so/deerwalk/Nest-5117ee4f653c4562890c913441495b87).
+
+
+
 ## Installation
 
 ```bash
