@@ -10,7 +10,7 @@ export class TasksController {
   constructor(private tasksService: TasksService) { }
 
   @Get() //GET decorator for tasks
-  getTasks(@Query() filterDto: GetTasksFilterDto): Task[] {
+  getTasks(@Query(ValidationPipe) filterDto: GetTasksFilterDto): Task[] { //we've added validation pipe to all the get requests
     if (Object.keys(filterDto)) {
       return this.tasksService.getTasksWithFilters(filterDto);
     } else {
