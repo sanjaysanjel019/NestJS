@@ -1,5 +1,5 @@
 import {  BadRequestException, PipeTransform } from '@nestjs/common'
-import { TaskStatus } from '../task.model';
+import { TaskStatus } from '../task-status.enum';
 
 export class TaskStatusValidationPipes implements PipeTransform {
     readonly allowedStatus = [
@@ -7,7 +7,7 @@ export class TaskStatusValidationPipes implements PipeTransform {
     TaskStatus.IN_PROGRESS ,
     TaskStatus.DONE,
     ]
-    transform(value:any,) {
+    transform(value:any) {
         value= value.toUpperCase();
         if (!this.isStatusValid(value)) {
             throw new BadRequestException(`${value} is an invalid status`)
